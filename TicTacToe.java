@@ -15,20 +15,29 @@ public class TicTacToe {
         toss();
         printBoard();
 
-        int slot = getUserInput();
+        int slot, row, col;
 
-        int[] position = convertSlotToIndex(slot);
-        int row = position[0];
-        int col = position[1];
+        // Keep asking until valid move
+        while (true) {
+            slot = getUserInput();
+            int[] pos = convertSlotToIndex(slot);
+            row = pos[0];
+            col = pos[1];
 
-        System.out.println("Mapped to -> Row: " + row + ", Column: " + col);
+            if (isValidMove(row, col)) {
+                System.out.println("Valid move!");
+                break;
+            } else {
+                System.out.println("Invalid move! Cell already occupied or out of bounds.");
+            }
+        }
     }
 
     // UC1
     static void initializeBoard() {
-        for (int row = 0; row < 3; row++) {
-            for (int col = 0; col < 3; col++) {
-                board[row][col] = '-';
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                board[r][c] = '-';
             }
         }
     }
@@ -59,30 +68,42 @@ public class TicTacToe {
             System.out.print("Enter a slot number (1-9): ");
             slot = sc.nextInt();
 
-            if (slot >= 1 && slot <= 9) {
-                break;
-            } else {
-                System.out.println("Invalid input! Enter 1-9.");
-            }
+            if (slot >= 1 && slot <= 9) break;
+            else System.out.println("Invalid input! Enter 1-9.");
         }
 
         return slot;
     }
 
-    // UC4: Convert slot → row, col
+    // UC4
     static int[] convertSlotToIndex(int slot) {
         int row = (slot - 1) / 3;
         int col = (slot - 1) % 3;
         return new int[]{row, col};
     }
 
+    // UC5: Validate move
+    static boolean isValidMove(int row, int col) {
+        // Check bounds
+        if (row < 0 || row > 2 || col < 0 || col > 2) {
+            return false;
+        }
+
+        // Check if cell is empty
+        if (board[row][col] != '-') {
+            return false;
+        }
+
+        return true;
+    }
+
     // UC1
     static void printBoard() {
         System.out.println("-------------");
-        for (int row = 0; row < 3; row++) {
+        for (int r = 0; r < 3; r++) {
             System.out.print("| ");
-            for (int col = 0; col < 3; col++) {
-                System.out.print(board[row][col] + " | ");
+            for (int c = 0; c < 3; c++) {
+                System.out.print(board[r][c] + " | ");
             }
             System.out.println();
             System.out.println("-------------");
