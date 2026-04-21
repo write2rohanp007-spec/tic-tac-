@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.Scanner;
 
 public class TicTacToe {
 
@@ -7,13 +8,19 @@ public class TicTacToe {
     static char computerSymbol;
     static char currentPlayer;
 
+    static Scanner sc = new Scanner(System.in);
+
     public static void main(String[] args) {
         initializeBoard();
         toss();
         printBoard();
+
+        // UC3: Take user input
+        int slot = getUserInput();
+        System.out.println("You selected slot: " + slot);
     }
 
-    // UC1: Initialize board
+    // UC1
     static void initializeBoard() {
         for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 3; col++) {
@@ -22,10 +29,10 @@ public class TicTacToe {
         }
     }
 
-    // UC2: Toss logic
+    // UC2
     static void toss() {
         Random rand = new Random();
-        int tossResult = rand.nextInt(2); // 0 or 1
+        int tossResult = rand.nextInt(2);
 
         if (tossResult == 0) {
             humanSymbol = 'X';
@@ -40,7 +47,25 @@ public class TicTacToe {
         }
     }
 
-    // UC1: Print board
+    // UC3: Get user input
+    static int getUserInput() {
+        int slot;
+
+        while (true) {
+            System.out.print("Enter a slot number (1-9): ");
+            slot = sc.nextInt();
+
+            if (slot >= 1 && slot <= 9) {
+                break;
+            } else {
+                System.out.println("Invalid input! Please enter a number between 1 and 9.");
+            }
+        }
+
+        return slot;
+    }
+
+    // UC1
     static void printBoard() {
         System.out.println("-------------");
         for (int row = 0; row < 3; row++) {
