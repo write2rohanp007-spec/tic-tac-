@@ -10,6 +10,7 @@ public class TicTacToe {
     static char currentPlayer;
 
     static Scanner sc = new Scanner(System.in);
+    static Random rand = new Random();
 
     public static void main(String[] args) {
 
@@ -17,33 +18,30 @@ public class TicTacToe {
         toss();
         printBoard();
 
-        while (true) {
+        // Human move
+        int slot = getUserInput();
 
-            int slot = getUserInput();
+        int[] userPos = convertSlotToIndex(slot);
 
-            int[] position = convertSlotToIndex(slot);
+        int userRow = userPos[0];
+        int userCol = userPos[1];
 
-            int row = position[0];
-            int col = position[1];
+        if (isValidMove(userRow, userCol)) {
 
-            // UC5 Validation
-            if (isValidMove(row, col)) {
+            placeMove(userRow, userCol, humanSymbol);
 
-                // UC6 Place Move
-                placeMove(row, col, currentPlayer);
-
-                System.out.println("Move placed successfully!");
-
-                printBoard();
-                break;
-
-            } else {
-                System.out.println("Invalid move! Try again.");
-            }
+            System.out.println("Human move placed.");
+            printBoard();
         }
+
+        // UC7: Computer move
+        computerMove();
+
+        System.out.println("Computer move placed.");
+        printBoard();
     }
 
-    // UC1: Initialize Board
+    // UC1
     static void initializeBoard() {
 
         for (int row = 0; row < 3; row++) {
@@ -55,10 +53,8 @@ public class TicTacToe {
         }
     }
 
-    // UC2: Toss
+    // UC2
     static void toss() {
-
-        Random rand = new Random();
 
         int tossResult = rand.nextInt(2);
 
@@ -66,21 +62,19 @@ public class TicTacToe {
 
             humanSymbol = 'X';
             computerSymbol = 'O';
-            currentPlayer = humanSymbol;
 
-            System.out.println("You won the toss! You play first as X");
+            System.out.println("You won toss! You are X");
 
         } else {
 
             humanSymbol = 'O';
             computerSymbol = 'X';
-            currentPlayer = humanSymbol;
 
-            System.out.println("Computer won the toss! You are O");
+            System.out.println("Computer won toss! Computer is X");
         }
     }
 
-    // UC3: User Input
+    // UC3
     static int getUserInput() {
 
         int slot;
@@ -99,7 +93,7 @@ public class TicTacToe {
         }
     }
 
-    // UC4: Convert Slot → Row & Column
+    // UC4
     static int[] convertSlotToIndex(int slot) {
 
         int row = (slot - 1) / 3;
@@ -108,29 +102,46 @@ public class TicTacToe {
         return new int[]{row, col};
     }
 
-    // UC5: Validate Move
+    // UC5
     static boolean isValidMove(int row, int col) {
 
-        // Boundary check
         if (row < 0 || row > 2 || col < 0 || col > 2) {
             return false;
         }
 
-        // Empty cell check
-        if (board[row][col] != '-') {
-            return false;
-        }
-
-        return true;
+        return board[row][col] == '-';
     }
 
-    // UC6: Place Move
+    // UC6
     static void placeMove(int row, int col, char symbol) {
 
         board[row][col] = symbol;
     }
 
-    // Display Board
+    // UC7
+    static void computerMove() {
+
+        while (true) {
+
+            int randomSlot = rand.nextInt(9) + 1;
+
+            int[] pos = convertSlotToIndex(randomSlot);
+
+            int row = pos[0];
+            int col = pos[1];
+
+            if (isValidMove(row, col)) {
+
+                placeMove(row, col, computerSymbol);
+
+                System.out.println("Computer selected slot: " + randomSlot);
+
+                break;
+            }
+        }
+    }
+
+    // Display board
     static void printBoard() {
 
         System.out.println("-------------");
