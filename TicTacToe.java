@@ -4,6 +4,7 @@ import java.util.Scanner;
 public class TicTacToe {
 
     static char[][] board = new char[3][3];
+
     static char humanSymbol;
     static char computerSymbol;
     static char currentPlayer;
@@ -11,85 +12,111 @@ public class TicTacToe {
     static Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
+
         initializeBoard();
         toss();
         printBoard();
 
-        int slot, row, col;
-
-        // Keep asking until valid move
         while (true) {
-            slot = getUserInput();
-            int[] pos = convertSlotToIndex(slot);
-            row = pos[0];
-            col = pos[1];
 
+            int slot = getUserInput();
+
+            int[] position = convertSlotToIndex(slot);
+
+            int row = position[0];
+            int col = position[1];
+
+            // UC5 Validation
             if (isValidMove(row, col)) {
-                System.out.println("Valid move!");
+
+                // UC6 Place Move
+                placeMove(row, col, currentPlayer);
+
+                System.out.println("Move placed successfully!");
+
+                printBoard();
                 break;
+
             } else {
-                System.out.println("Invalid move! Cell already occupied or out of bounds.");
+                System.out.println("Invalid move! Try again.");
             }
         }
     }
 
-    // UC1
+    // UC1: Initialize Board
     static void initializeBoard() {
-        for (int r = 0; r < 3; r++) {
-            for (int c = 0; c < 3; c++) {
-                board[r][c] = '-';
+
+        for (int row = 0; row < 3; row++) {
+
+            for (int col = 0; col < 3; col++) {
+
+                board[row][col] = '-';
             }
         }
     }
 
-    // UC2
+    // UC2: Toss
     static void toss() {
+
         Random rand = new Random();
+
         int tossResult = rand.nextInt(2);
 
         if (tossResult == 0) {
+
             humanSymbol = 'X';
             computerSymbol = 'O';
             currentPlayer = humanSymbol;
-            System.out.println("You won the toss! You play first with 'X'");
+
+            System.out.println("You won the toss! You play first as X");
+
         } else {
+
             humanSymbol = 'O';
             computerSymbol = 'X';
-            currentPlayer = computerSymbol;
-            System.out.println("Computer won the toss! Computer plays first with 'X'");
+            currentPlayer = humanSymbol;
+
+            System.out.println("Computer won the toss! You are O");
         }
     }
 
-    // UC3
+    // UC3: User Input
     static int getUserInput() {
+
         int slot;
 
         while (true) {
-            System.out.print("Enter a slot number (1-9): ");
+
+            System.out.print("Enter slot number (1-9): ");
+
             slot = sc.nextInt();
 
-            if (slot >= 1 && slot <= 9) break;
-            else System.out.println("Invalid input! Enter 1-9.");
-        }
+            if (slot >= 1 && slot <= 9) {
+                return slot;
+            }
 
-        return slot;
+            System.out.println("Invalid input!");
+        }
     }
 
-    // UC4
+    // UC4: Convert Slot → Row & Column
     static int[] convertSlotToIndex(int slot) {
+
         int row = (slot - 1) / 3;
         int col = (slot - 1) % 3;
+
         return new int[]{row, col};
     }
 
-    // UC5: Validate move
+    // UC5: Validate Move
     static boolean isValidMove(int row, int col) {
-        // Check bounds
+
+        // Boundary check
         if (row < 0 || row > 2 || col < 0 || col > 2) {
             return false;
         }
 
-        // Check if cell is empty
+        // Empty cell check
         if (board[row][col] != '-') {
             return false;
         }
@@ -97,14 +124,26 @@ public class TicTacToe {
         return true;
     }
 
-    // UC1
+    // UC6: Place Move
+    static void placeMove(int row, int col, char symbol) {
+
+        board[row][col] = symbol;
+    }
+
+    // Display Board
     static void printBoard() {
+
         System.out.println("-------------");
-        for (int r = 0; r < 3; r++) {
+
+        for (int row = 0; row < 3; row++) {
+
             System.out.print("| ");
-            for (int c = 0; c < 3; c++) {
-                System.out.print(board[r][c] + " | ");
+
+            for (int col = 0; col < 3; col++) {
+
+                System.out.print(board[row][col] + " | ");
             }
+
             System.out.println();
             System.out.println("-------------");
         }
